@@ -1,5 +1,5 @@
 import sys
-from arg_handler import process_args
+from src.arg_handler import process_args
 
 if __name__ == "__main__":
 	user_args = sys.argv[1:]

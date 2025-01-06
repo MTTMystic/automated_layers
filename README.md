@@ -18,4 +18,15 @@ This version's program flow is intended as follows:
 
 Possible extensions:
 	- allow user to specify target length intended and fit tracks to that length using change tempo
-	
+	- allow user to choose whether the program runs "in place" or uses a working directory copy
+
+## CML Exec
+
+(python3) main.py input_dir=[input_folder_path] batch_size= [int up to 30] auto_amplify=[int up to 35]
+
+auto_amplify=0 means no change in volume level per each track.
+
+## Devlog
+
+### 01-05-2025
+First program init and use of batcher.

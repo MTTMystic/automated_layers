@@ -23,26 +23,26 @@ def get_arg_val(arg_cml):
     return arg_cml.split(arg_eq_sym)[1]
 
 def process_args(user_args):
-	input_folder_cml = None if len(user_args) < 1 else user_args[0]
+	input_dir_cml = None if len(user_args) < 1 else user_args[0]
 	batch_size_cml = None if len(user_args) < 2 else user_args[1]
 	auto_amp_cml = None if len(user_args) < 3 else user_args[2]
 
 
-	typo_input_folder = typo_in_arg(input_folder_cml, input_folder_arg_prefix) if input_folder_cml else False
+	typo_input_dir = typo_in_arg(input_dir_cml, input_dir_arg_prefix) if input_dir_cml else False
 	typo_batch_size = typo_in_arg(batch_size_cml, batch_size_arg_prefix) if batch_size_cml else False
 	typo_auto_amp = typo_in_arg(auto_amp_cml, auto_amp_arg_prefix) if auto_amp_cml else False
 
 	invalid_auto_amp = int(get_arg_val(auto_amp_cml)) > auto_amp_limit if auto_amp_cml else False
 	invalid_batch_size = int(get_arg_val(batch_size_cml)) > batch_size_limit if batch_size_cml else False
 
-	args_invalid = (not input_folder_cml) or typo_input_folder or typo_auto_amp or typo_batch_size\
+	args_invalid = (not input_dir_cml) or typo_input_dir or typo_auto_amp or typo_batch_size\
 	                or invalid_auto_amp or invalid_batch_size
 	if args_invalid:
-	    args = [f"\"{input_folder_arg_prefix}\"[folder path]", f"\"{batch_size_arg_prefix}\"[int <= {batch_size_limit}](optional)", f"\"{auto_amp_arg_prefix}\"[int <= {auto_amp_limit}](optional)"]
+	    args = [f"\"{input_dir_arg_prefix}\"[folder path]", f"\"{batch_size_arg_prefix}\"[int <= {batch_size_limit}](optional)", f"\"{auto_amp_arg_prefix}\"[int <= {auto_amp_limit}](optional)"]
 	    args_list_str = " ".join(args)
 	    cml_format = f"(python3) main.py {args_list_str}"
 	    print(f"Please call the program as \n {cml_format}")
 	    exit()
-	#args contains all arguments that were given, including input_folder (mandatory) and non-None (False) args
-	args = [get_arg_val(x) for x in [input_folder_cml, batch_size_cml, gen_mode_cml] if x]
+	#args contains all arguments that were given, including input_dir (mandatory) and non-None (False) args
+	args = [get_arg_val(x) for x in [input_dir_cml, batch_size_cml, auto_amp_cml] if x]
 	return args

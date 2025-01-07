@@ -1,9 +1,9 @@
-arg_eq_sym = "="
-input_dir_arg_prefix = f"input_dir{arg_eq_sym}"
-batch_size_arg_prefix = f"batch_size{arg_eq_sym}"
-auto_amp_arg_prefix = f"auto_amplify{arg_eq_sym}"
-batch_size_limit = 30
-auto_amp_limit = 35
+from .globals import *
+import sys
+import shutil
+import os
+sys.path.append('./batch_packer/src/')
+from constants import input_dir_arg_prefix
 
 def get_arg_prefix(arg_cml):
     return arg_cml.split(arg_eq_sym)[0]
@@ -34,7 +34,6 @@ def process_args(user_args):
 
 	invalid_auto_amp = int(get_arg_val(auto_amp_cml)) > auto_amp_limit if auto_amp_cml else False
 	invalid_batch_size = int(get_arg_val(batch_size_cml)) > batch_size_limit if batch_size_cml else False
-
 	args_invalid = (not input_dir_cml) or typo_input_dir or typo_auto_amp or typo_batch_size\
 	                or invalid_auto_amp or invalid_batch_size
 	if args_invalid:

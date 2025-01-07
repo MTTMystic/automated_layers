@@ -30,3 +30,17 @@ auto_amplify=0 means no change in volume level per each track.
 
 ### 01-05-2025
 First program init and use of batcher.
+
+### 01-06-2025
+
+- extracted arg handler to separate file (based on batch packer, which remains untouched as utility) because it's useful outside the batcher
+- extracted check_path_basic from batcher to seperate file (again, untouched in packer) because it's useful outside that class!
+- validation_handler anticipated to complete more verification of files and dirs
+
+### 01-07-2025
+- renamed validation to fileio_handler
+- loads of progress on auto_layering with user input loop (one batch at a time) and beginning phases of loading and processing audio
+- frustrated by attempts to install pyaudacity failing thus far, will try again tomorrow as it's a natural stopping point
+- slightly modified batch_packer and extracted some of its values to external file for access by auto_layering
+- function to auto-generate test disposable directories to use auto_layering infinite amount of times without modifying existing directory (original)
+- managing one-batch-at-a-time loading with batch_idx indexing into each batch in active dir after batching complete (all at once before processing each batch)

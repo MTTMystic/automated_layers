@@ -14,7 +14,7 @@ class AutoLayer:
 
 	class UserInput(Enum):
 		CONTINUE_NEXT_BATCH = 'y'
-		EXIT_LOOP = 'exit'
+		EXIT = 'exit'
 	
 	_batch_dirs = []
 	_batch_idx = 0
@@ -31,47 +31,74 @@ class AutoLayer:
 			print("batch dir could not be validated, see error and correct if possible")
 			return False
 
-	def process_batch(self):
+	def _update_current_batch(self):
 		self._current_batch = self._batch_dirs[self._batch_idx]
-		if (self._validate_batch_files(self._current_batch)):
+		return self._current_batch
+
+	def process_batch(self):
+		if (self._validate_batch_files(self._update_current_batch())):
 			#first step is to load file as audio track
 			#TODO mutagen imports and switch should not rely on dev foreknowledge of valid filetypes?
 			for audio_fp in os.listdir(self._current_batch):
 				audio_full_fp = os.path.join(self._current_batch, audio_fp) 
 				audio = load_audio(os.path.abspath(audio_full_fp))
 				if (audio is not None):
-					self.current_audios[audio_fp] = audio
+					self.current_audios[audio_fp] = int(audio.info.length)
 					#next step is to import the audio track
-					
+				else:
+					print("There was an audio error processing {audio_fp}")
+					return False
 		else:
 			print("failed to validate current batch")
 			return False
+		self._batch_idx += 1
+		return True
 
 	def _user_prompt_ready_check(self):
-		user_prompt = print("\n".join([user_proceed,  user_prompt_exit, unsaved_progress_warning, " : "]))
+		user_prompt ="\n".join([user_proceed_ready, user_proceed,  user_prompt_exit, unsaved_progress_warning, " : "])
 		user_answer = input(user_prompt).lower()
-		
-		return user_answer
+		while not user_answer in self.UserInput:
+			user_answer = input(user_prompt_invalid_response).lower()
+		if (user_answer is self.UserInput.EXIT):
+			#TODO allow user to select which batch to start at and tell them which batch was next
+			print("Exit chosen. Your progress will not be saved, and next program execution will start over with first batch")
+			return False
+		else:
+			if not self._finished():
+				print("Proceeding to next batch")
+			return True
 	
-	def exec_loop(self):
-		continue_loop = True
-		awaiting_user_ready = False
+	def _finished(self):
+		if self._batch_idx > (len(self._batch_dirs) - 1):
+			print("There are no more batches to process")
+			return True
+		return False
+	
+	def run(self):
+		"""continue_loop = True
 		while continue_loop:
-			while awaiting_user_ready:
-				print("awaiting user ready")
+			continue_loop = self.process_batch()
+			awaiting_proceed = continue_loop
+			while awaiting_proceed:
 				user_answer = self._user_prompt_ready_check()
 				if user_answer in self.UserInput:
 					if user_answer is self.UserInput.EXIT_LOOP:
 						continue_loop = False
-						continue
+						awaiting_proceed = False
 					else:
-						awaiting_user_ready = False
+						awaiting_proceed = False
 				else:
 					print(user_prompt_invalid_response)
-					continue
-			print("not awaiting user ready")
-			continue_loop = self.process_batch()
-			awaiting_user_ready = True
+					continue_loop = False"""
+		continue_running = not self._finished()
+		while continue_running:
+			batch_succeed = self.process_batch()
+			if (batch_succeed):
+				print("batch processed")
+			if (not batch_succeed):
+				continue_running = False
+			else:
+				continue_running = not self._finished() and self._user_prompt_ready_check()
 	
 	def _init_batcher(self, batch_size):
 		self._batcher = BatchPacker(self._active_dir, batch_size)

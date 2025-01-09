@@ -44,3 +44,20 @@ First program init and use of batcher.
 - slightly modified batch_packer and extracted some of its values to external file for access by auto_layering
 - function to auto-generate test disposable directories to use auto_layering infinite amount of times without modifying existing directory (original)
 - managing one-batch-at-a-time loading with batch_idx indexing into each batch in active dir after batching complete (all at once before processing each batch)
+
+### 01-08-2025
+- sophisticated redesign of test_dir auto generation for instrumented tests by ensuring duplicate items are removed and upon exhausting alphabet (for dir names) other folders besides test_dir_orig will be auto-deleted
+- finish function ensures no re-batching or re-prompting of user to continue batching after all batches have been processed
+- loop stops execution after all batches processed and fixed bug of ternary and double-print (using input and print, erroneously, in recursive call) causing input failing to be processed as correct/incorrect
+- finally completed user prompt loop in coherent fashion without use of extraneous messages or reporting and with proper sequence (A point of headache before debugging mentioned and finish function)
+- renamed exec loop to run
+- validation of what files are in each batch per-batch (optimization)
+- audio loading storage of track length. experimental, as audacity may start a fit if special non-ascii characters are in files imported (even though manual import in audacity interface does not typically throw errors) and require renaming -- but specific investigation of this may reveal prior version's renaming effort is unecessary. If otherwise I will have to store the fp of the original audio track to use as a track label in addition to the length, so that the user can correlate each track to which file was imported rather than useless data of tracks named "0" or "a" etc.
+- in future consider design (not planned feature atm) of allowing user to specify whether to process next batch in a new window or same window
+
+
+next steps are to implement macro functions using a macro factory for formatting (possibly a file with macro formatted strings) and use macro handler to provide functionality for features such as repeater, auto trim, auto layer and auto-amplify
+
+ultimately the goal is to ensure if user wants to layer any subliminal affirmations (different affirmations if split into multiple sections or files for one subliminal created from scratch) all layers can be adjusted to same length with repeater, and automatically corrected if repeats exceed original length by auto-trim
+
+additionally as this is a revamp I don't intend yet to implement auto-tempo features to adjust tempo to shorter lengths - this is such that automatically the longest length of any audio track is what will be selected and not the shortest or a user target

@@ -20,3 +20,5 @@ user_proceed_ready = "Are you ready for the next batch to be imported?"
 user_proceed = "Please type y to continue or exit to terminate program execution."
 user_prompt_exit = "If you prefer to exit the program, type exit"
 user_prompt_invalid_response = "Your response was invalid, try again"
+
+program_finished = "There are no more batches to process"

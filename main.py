@@ -7,4 +7,4 @@ if __name__ == "__main__":
 	user_args = sys.argv[1:]
 	al_args = process_args(user_args)
 	auto_layer_machine = AutoLayer(*al_args)
-	auto_layer_machine.exec_loop()
+	auto_layer_machine.run()

@@ -7,7 +7,15 @@ import string
 
 def generate_test_dir():
         random_char = random.choice(string.ascii_lowercase)
-        test_dir_dst = test_dir_fp_dst.format(random_char)
+        test_dir_dst = ""
+        tries = 0
+        while test_dir_dst in os.listdir(test_dir_fp) or tries < len(string.ascii_lowercase):
+            test_dir_dst = test_dir_fp_dst.format(random_char)
+            tries+=1
+        if (tries > len(string.ascii_lowercase)):
+            for dirp in os.listdir(test_dir_fp):
+                if (dirp not test_dir_fp_orig)
+                    shutil.rmtree(dirp)
         os.makedirs(test_dir_dst, mode=0o755, exist_ok=True)
         #os.chmod(test_dir_dst, 0o755)
         for filepath in os.listdir(test_dir_fp_orig):

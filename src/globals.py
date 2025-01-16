@@ -1,5 +1,7 @@
 from os import path
 
+dev_mode = False
+
 arg_eq_sym = "="
 input_dir_arg_prefix = f"input_dir{arg_eq_sym}"
 batch_size_arg_prefix = f"batch_size{arg_eq_sym}"
@@ -13,7 +15,6 @@ test_dir_fp_dst = path.join(test_dir_fp, "test_dir_{}")
 test_input_cml = "test"
 
 valid_filetypes = ['m4a', 'mp3']
-
 
 unsaved_progress_warning = "This will not save your progress in processing batches with the auto layer machine"
 user_proceed_ready = "Are you ready for the next batch to be imported?"

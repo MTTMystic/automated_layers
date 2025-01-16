@@ -18,39 +18,20 @@ class AutoLayer:
 	
 	_batch_dirs = []
 	_batch_idx = 0
-
-	current_audios = {}
-
-	def _validate_batch_files(self, batch_dirp):
-		if (check_dir_path(batch_dirp)):
-			for fp in os.listdir(batch_dirp):
-				if not check_filetype(fp):
-					return False
-			return True
+	
+	def _current_batch(self):
+		if (self._batch_idx < len(self._batch_dirs)):
+			return self._batch_dirs[self._batch_idx]
 		else:
-			print("batch dir could not be validated, see error and correct if possible")
-			return False
+			return []
 
-	def _update_current_batch(self):
-		self._current_batch = self._batch_dirs[self._batch_idx]
-		return self._current_batch
 
 	def process_batch(self):
-		if (self._validate_batch_files(self._update_current_batch())):
-			#first step is to load file as audio track
-			#TODO mutagen imports and switch should not rely on dev foreknowledge of valid filetypes?
-			for audio_fp in os.listdir(self._current_batch):
-				audio_full_fp = os.path.join(self._current_batch, audio_fp) 
-				audio = load_audio(os.path.abspath(audio_full_fp))
-				if (audio is not None):
-					self.current_audios[audio_fp] = int(audio.info.length)
-					#next step is to import the audio track
-				else:
-					print("There was an audio error processing {audio_fp}")
-					return False
-		else:
-			print("failed to validate current batch")
+		if (validate_batch(self.current_batch())):
+			print("batch is invalid")
 			return False
+		else:
+			
 		self._batch_idx += 1
 		return True
 
@@ -73,7 +54,7 @@ class AutoLayer:
 			print("There are no more batches to process")
 			return True
 		return False
-	
+
 	def run(self):
 		"""continue_loop = True
 		while continue_loop:
@@ -106,15 +87,12 @@ class AutoLayer:
 		self._batch_dirs = [os.path.join(self._active_dir, x) for x in os.listdir(self._active_dir)]
 		print(self._batch_dirs)
 
-	def __init__(self, input_dir, batch_size=None, auto_amp = 0):
-		input_dir_fr =  input_dir
-
-		if (input_dir_fr.lower() == test_input_cml):
-			print("generate test dir")
-			input_dir_fr = generate_test_dir()
-
-
-		if (check_dir_path(input_dir_fr)):
+	def __init__(self, given_input_dir, given_batch_size=None, given_auto_amp = 0):	
+		test_dir = given_input_dir.lower() == test_input_cml
+		valid_input_dir = check_dir(input_dir_fr) or 
+		if ():
+			if ():
+					input_dir = generate_test_dir()
 			self._active_dir = os.path.abspath(input_dir_fr)
 
 			batch_size_fr = default_batch_size

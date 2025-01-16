@@ -22,7 +22,7 @@ Possible extensions:
 
 ## CML Exec
 
-(python3) main.py input_dir=[input_folder_path] batch_size= [int up to 30] auto_amplify=[int up to 35]
+(python3) main.py input_dir=[input_folder_path] batch_size= [int up to 30] auto_amp=[int up to 35]
 
 auto_amplify=0 means no change in volume level per each track.
 

@@ -7,11 +7,9 @@ from .audio_handler import *
 sys.path.append("./batch_packer/src")
 from batch_packer import BatchPacker
 from constants import *
-
 from enum import Enum
-
+import pyaudacity as pa
 class AutoLayer:
-
 	class UserInput(Enum):
 		CONTINUE_NEXT_BATCH = 'y'
 		EXIT = 'exit'
@@ -71,6 +69,7 @@ class AutoLayer:
 				else:
 					print(user_prompt_invalid_response)
 					continue_loop = False"""
+		pa.new()
 		continue_running = not self._finished()
 		while continue_running:
 			batch_succeed = self.process_batch()

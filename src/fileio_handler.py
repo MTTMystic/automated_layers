@@ -7,13 +7,13 @@ import string
 from enum import Enum
 
 class err_msgs(Enum):
-    does_not_exist = "That {fp} does not exist"
-    invalid_shouldbe = "The {given_fp} should be a {correct}"
-    wrong_permissions = "The {fp} has wrong permissions"
-    missing_permissions = "The {fp} is missing {} permissions"
+    does_not_exist = "That {} does not exist"
+    invalid_shouldbe = "The {} should be a {}"
+    wrong_permissions = "The {} has wrong permissions"
+    missing_permissions = "The {} is missing {} permissions"
 
 def get_audio_ext(audio_fn):
-    return os.splitext(audio_fn)[1][1:]
+    return os.path.splitext(audio_fn)[1][1:]
     #todo check if fn is correct and valid
     #now functionality is priority
 
@@ -49,21 +49,21 @@ def check_path_basic(fp, shouldBeDir = False):
     not_as_should_be = "file" if shouldBeDir else "dir"
 
     if not os.path.exists(abspath):
-        print(err_msgs.does_not_exist.format(fp))
+        print(err_msgs.does_not_exist.value.format(fp))
         return False
 
     invalid_should_be_file = os.path.isdir(abspath) and not shouldBeDir
     invalid_should_be_dir = not os.path.isdir(abspath) and shouldBeDir
-    wrong_type = invalid_type_should_be_dir or invalid_type_should_be_file
+    wrong_type = invalid_should_be_dir or invalid_should_be_file
     
     if wrong_type:
-        correct_item = "dir" if invalid_should_be_dir else "file"
-        print(err_msgs.invalid_shouldbe.format(fp, correct_item))
+        correct = "dir" if invalid_should_be_dir else "file"
+        print(err_msgs.invalid_shouldbe.value.format(fp, correct))
         return False
 
     read_access = os.access(abspath, os.R_OK)
     if (not read_access):
-     print(err_msgs.missing_permissions.format(fp, "read"))
+     print(err_msgs.missing_permissions.value.format(fp, "read"))
      return False
     #congrats the type and permissions are correct and it literally exists at all!
     return True
@@ -75,23 +75,20 @@ def check_filetype(fp):
     fn, ext = os.path.splitext(fp)
     return ext[1:] in valid_filetypes
 
-def validate_batch(batch_dirp)
-        #only executes if a) not dev mode and no need to check batch or b) dev mode and batching wrong
-        #or means first is checked then rest is ignored
-        if (not dev_mode or not check_dir(batch_dirp)):
+def validate_batch(batch_dirp):
+        if (check_dir(batch_dirp)):
             invalid_files = []
             for fp in os.listdir(batch_dirp):
+                if not check_path_basic(os.path.join(batch_dirp, fp)):
+                    return False
+
                 if not check_filetype(fp):
                     invalid_files.append(os.path.join(get_basename(batch_dirp), get_basename(fp)))
-                    
+    
             if (len(invalid_files) > 0):
                 invalid_files_string = "\n".join(invalid_files)
                 print("The following files are invalid: \n" + invalid_files_string)
                 print("Valid filetypes are" + " ".join(valid_filetypes))
                 return False
-            
             return True
-        else:
-            #this is only relevant to dev, not to user, since batcher was made by dev
-            print("check dev implementation of batcher and/or audio")
-            return False 
+        return False

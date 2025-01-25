@@ -61,3 +61,6 @@ next steps are to implement macro functions using a macro factory for formatting
 ultimately the goal is to ensure if user wants to layer any subliminal affirmations (different affirmations if split into multiple sections or files for one subliminal created from scratch) all layers can be adjusted to same length with repeater, and automatically corrected if repeats exceed original length by auto-trim
 
 additionally as this is a revamp I don't intend yet to implement auto-tempo features to adjust tempo to shorter lengths - this is such that automatically the longest length of any audio track is what will be selected and not the shortest or a user target
+
+### 01-24-2025
+Significant (non-logged whoops) progress. Made strides with macro enum for common usages and importing files. Wrote sanitizer function for cleaning up special characters and inconveniences for purpose of importing into Audacity. Cleaned up and modularized code for audio and main auto_layer class as well as implemented audio handler tracking each audio and its length, filetype, and track num. Next step is to import files using new feature to pre-rename all files in dir before proceeding with import to avoid problems. Will test latest implementation of sanitizer and import later.

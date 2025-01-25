@@ -34,7 +34,7 @@ def generate_test_dir():
             for dirp in os.listdir(test_dir_fp):
                 if (dirp != test_dir_fp_orig):
                     shutil.rmtree(dirp)
-        os.makedirs(test_dir_dst, mode=0o755, exist_ok=True)
+        os.makedirs(test_dir_dst, mode=0o755, exist_ok=False)
         #os.chmod(test_dir_dst, 0o755)
         for filepath in os.listdir(test_dir_fp_orig):
             src_fp = os.path.join(test_dir_fp_orig, filepath)
@@ -92,3 +92,4 @@ def validate_batch(batch_dirp):
                 return False
             return True
         return False
+

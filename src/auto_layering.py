@@ -4,6 +4,7 @@ import os
 from .globals import *
 from .fileio_handler import  *
 from .audio_handler import *
+from .sanitizer import *
 sys.path.append("./batch_packer/src")
 from batch_packer import BatchPacker
 from constants import *
@@ -22,7 +23,14 @@ class AutoLayer:
 			return self._batch_dirs[self._batch_idx]
 		else:
 			return ""
-
+	
+	#TODO filehandler io chain join
+	#TODO if not that then see if os has builtin chain path join
+	def _current_batch_path(self):
+		batch_basep = self._current_batch()
+		print(batch_basep)
+		return os.path.join(self._active_dir, batch_basep)
+		
 	def _user_prompt_ready_check(self):
 		user_prompt ="\n".join([user_proceed_ready, user_proceed,  user_prompt_exit, unsaved_progress_warning, " : "])
 		user_answer = input(user_prompt).lower()
@@ -45,8 +53,7 @@ class AutoLayer:
 
 	def process_batch(self):
 		if validate_batch(self._current_batch()):
-			batch_handler = AudioHandler(self._current_batch())
-
+			batch_handler = AudioHandler(self._current_batch_path())
 		else:
 			return False
 		self._batch_idx += 1
@@ -62,7 +69,9 @@ class AutoLayer:
 				continue_running = False
 			else:
 				continue_running = not self._finished() and self._user_prompt_ready_check()
-	
+	def _init_sanitizer(self):
+
+
 	def _init_batcher(self, batch_size):
 		self._batcher = BatchPacker(self._active_dir, batch_size)
 		self._batcher.gen_batch_all()

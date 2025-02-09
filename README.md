@@ -64,3 +64,6 @@ additionally as this is a revamp I don't intend yet to implement auto-tempo feat
 
 ### 01-24-2025
 Significant (non-logged whoops) progress. Made strides with macro enum for common usages and importing files. Wrote sanitizer function for cleaning up special characters and inconveniences for purpose of importing into Audacity. Cleaned up and modularized code for audio and main auto_layer class as well as implemented audio handler tracking each audio and its length, filetype, and track num. Next step is to import files using new feature to pre-rename all files in dir before proceeding with import to avoid problems. Will test latest implementation of sanitizer and import later.
+
+### 02-09-2025
+Still trying to resolve an Audacity problem with mod-script-pipe already noted [here](https://forum.audacityteam.org/t/different-errors-running-pipe-test/65305/2).

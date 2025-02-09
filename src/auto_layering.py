@@ -17,7 +17,7 @@ class AutoLayer:
 	
 	_batch_dirs = []
 	_batch_idx = 0
-	
+	_batch_handlers = []
 	def _current_batch(self):
 		if (self._batch_idx < len(self._batch_dirs)):
 			return self._batch_dirs[self._batch_idx]
@@ -28,15 +28,15 @@ class AutoLayer:
 	#TODO if not that then see if os has builtin chain path join
 	def _current_batch_path(self):
 		batch_basep = self._current_batch()
-		print(batch_basep)
 		return os.path.join(self._active_dir, batch_basep)
+		
 		
 	def _user_prompt_ready_check(self):
 		user_prompt ="\n".join([user_proceed_ready, user_proceed,  user_prompt_exit, unsaved_progress_warning, " : "])
 		user_answer = input(user_prompt).lower()
 		while not user_answer in self.UserInput:
 			user_answer = input(user_prompt_invalid_response).lower()
-		if (user_answer is self.UserInput.EXIT):
+		if (user_answer == self.UserInput.EXIT.value):
 			#TODO allow user to select which batch to start at and tell them which batch was next
 			print("Exit chosen. Your progress will not be saved, and next program execution will start over with first batch")
 			return False
@@ -53,11 +53,13 @@ class AutoLayer:
 
 	def process_batch(self):
 		if validate_batch(self._current_batch()):
-			batch_handler = AudioHandler(self._current_batch_path())
+			cbpath = os.path.abspath(self._current_batch_path())
+			self._batch_handlers.append(AudioHandler(cbpath)) 
+			self._batch_idx += 1
+			return True
 		else:
 			return False
-		self._batch_idx += 1
-		return True
+		
 
 	def run(self):
 		continue_running = not self._finished()
@@ -66,17 +68,21 @@ class AutoLayer:
 			if (batch_succeed):
 				print("batch processed")
 			if (not batch_succeed):
+				print("batch did not process correctly")
 				continue_running = False
+
 			else:
 				continue_running = not self._finished() and self._user_prompt_ready_check()
+	
 	def _init_sanitizer(self):
-
+		self._sanitizer = Sanitizer()
+		self._sanitizer.set_inplace(True)
+		self._sanitizer.sanitize_dir(self._active_dir)
 
 	def _init_batcher(self, batch_size):
 		self._batcher = BatchPacker(self._active_dir, batch_size)
 		self._batcher.gen_batch_all()
 		self._batch_dirs = [os.path.join(self._active_dir, x) for x in os.listdir(self._active_dir)]
-		print(self._batch_dirs)
 
 	def __init__(self, given_input_dir, given_batch_size=None, given_auto_amp = 0):	
 			to_gen_test_dir = given_input_dir.lower() == test_input_cml
@@ -85,7 +91,8 @@ class AutoLayer:
 			if (not valid_input_dir):
 				print("Layering failed, try again after addressing reported errors (if any).") 
 			self._active_dir = os.path.abspath(input_dir)
+			self._init_sanitizer()
 			batch_size = default_batch_size if not given_batch_size else int(given_batch_size)
-			self._init_batcher(batch_size )
+			self._init_batcher(batch_size)
 
 			

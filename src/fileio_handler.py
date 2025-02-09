@@ -20,8 +20,6 @@ def get_audio_ext(audio_fn):
 def get_basename(fp):
     if os.path.exists(fp):
         return os.path.basename(fp)
-    else:
-        print()
 
 def generate_test_dir():
         random_char = random.choice(string.ascii_lowercase)

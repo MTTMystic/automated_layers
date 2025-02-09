@@ -30,9 +30,11 @@ class Sanitizer():
         new_fn = ""
         for char in fn:
             next_char = char
-            if not char.isascii():
+            non_ascii = not char.isascii()
+            inappropriate_point = char == "."
+            if non_ascii or inappropriate_point:
                 next_char = self._sub_char
-            
+        
             new_fn += next_char
         return new_fn + orig_ext
 
@@ -47,7 +49,7 @@ class Sanitizer():
         
     def sanitize_dir(self, dir):
         for idx, fn in enumerate(os.listdir(dir)):
-            print((idx, fn))
+            #print((idx, fn))
             self.sanitize(os.path.join(os.path.abspath(dir), fn), idx)
             #self.sanitize(fn, idx)
     
